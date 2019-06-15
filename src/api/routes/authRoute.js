@@ -5,10 +5,10 @@ import { validateRequest, validateUsername, validateEmail }  from '../../middlew
 
 
 const authRoute = Router();
-const { signup, login , verifyEmail} = AuthController;
+const { signup, login , verifyAccount} = AuthController;
 
 authRoute.post('/signup', validateRequest('signup'), validateUsername, validateEmail, signup);
 authRoute.post('/login', login);
-authRoute.post('/verify-email', verifyEmail);
+authRoute.get('/verify-account', verifyAccount);
 
 export default authRoute;

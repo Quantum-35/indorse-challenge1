@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import db from '../../sequelize/models';
 import EmailService from '../../utils/Email';
 
@@ -24,8 +26,9 @@ class AuthController {
         });
         if(newUser) {
             try {
+                const token = jwt.sign({username}, process.env.SECRET_KEY, {expiresIn: '2h'});
                 const client = {
-                    firstName, lastName, email, username
+                    firstName, lastName, email, username, token
                 }
                 await sendValidationEmail(client);
                 return res.status(200).json({
@@ -55,10 +58,30 @@ class AuthController {
         })
     }
 
-    static async verifyEmail(req, res) {
-        res.status(200).json({
-            status: 200,
-            message: "Email verified"
+    static async verifyAccount(req, res) {
+        const { token } = req.query;
+        const user = jwt.verify(token, process.env.SECRET_KEY)
+        if (user) {
+            try {
+                await User.update(
+                    { verified: true },
+                    { where: { username: user.username }},
+                    );
+                return res.status(202).json({
+                    status: 202,
+                    message: "Account verified."
+                })
+            } catch (error) {
+                console.log('===>', error)
+                return res.status(406).json({
+                    status: 406,
+                    message: "Could not verify the Account."
+                })
+            }
+        }
+        res.status(401).json({
+            status: 401,
+            message: "Invalid or Expired token"
         })
     }
 }
