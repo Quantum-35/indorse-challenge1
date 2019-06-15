@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 import db from '../../sequelize/models';
 import EmailService from '../../utils/Email';
@@ -20,7 +21,10 @@ class AuthController {
             })
         }
         const newUser = await User.create({
-            firstName, lastName, email, verified, password, username,
+            firstName,
+            lastName, email, verified,
+            password: bcrypt.hashSync(password, 8),
+            username,
             bio, gender
 
         });
@@ -52,10 +56,45 @@ class AuthController {
     }
 
     static async login(req, res) {
-        res.status(200).json({
-            status: 200,
-            message: "Logged in successful"
-        })
+        const { body: { username, password } } = req;
+        try {
+            await User.findAll({
+                where: {
+                    username: username
+                }
+            }).then((data) => {
+                if(data.length > 0) {
+                    const queryPassword = data[0].dataValues.password;
+                    if(!data[0].dataValues.verified) {
+                        return res.status(403).json({
+                            status: 200,
+                            message: "Your Account is not verified. Please check your email."
+                        }); 
+                    }else if (bcrypt.compareSync(password, queryPassword)) {
+                        const {username, email} = data[0].dataValues;
+                        const token = jwt.sign({username, email}, process.env.SECRET_KEY, {expiresIn: '8h'});
+                        return res.status(200).json({
+                            status: 200,
+                            message: "Logged in successfully",
+                            token: token
+                        });
+                    }
+                    return res.status(400).json({
+                        status: 400,
+                        message: "Invalid username or Password!!"
+                    });
+                }
+                return res.status(400).json({
+                    status: 400,
+                    message: "Invalid username or Password!!"
+                });
+            })
+        } catch (error) {
+            return res.status(400).json({
+                    status: 400,
+                    message: "Invalid username or Password!"
+                });
+        }
     }
 
     static async verifyAccount(req, res) {
@@ -72,7 +111,6 @@ class AuthController {
                     message: "Account verified."
                 })
             } catch (error) {
-                console.log('===>', error)
                 return res.status(406).json({
                     status: 406,
                     message: "Could not verify the Account."
