@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
 import AuthController from '../controllers/auth';
-import validateRequest from '../../middleware/validateRequest';
+import { validateRequest, validateUsername, validateEmail }  from '../../middleware/validateRequest';
 
 
 const authRoute = Router();
 const { signup, login , verifyEmail} = AuthController;
 
-authRoute.post('/signup', validateRequest('signup'), signup);
+authRoute.post('/signup', validateRequest('signup'), validateUsername, validateEmail, signup);
 authRoute.post('/login', login);
 authRoute.post('/verify-email', verifyEmail);
 

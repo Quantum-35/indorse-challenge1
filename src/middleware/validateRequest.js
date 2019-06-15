@@ -1,8 +1,11 @@
 import Joi from '@hapi/joi';
 import _ from 'lodash';
 import validations from '../utils/validateUser';
+import db from '../sequelize/models';
 
-const validateRequest= validate => (req, res, next) => {
+const { User } = db;
+
+export const validateRequest= validate => (req, res, next) => {
     const data = req.body;
     if(_.has(validations, validate)) {
         const validateSchema = _.get(validations, validate);
@@ -26,4 +29,42 @@ const validateRequest= validate => (req, res, next) => {
     }
 }
 
-export default validateRequest;
+export const validateUsername = (req, res, next) => {
+    const { username } = req.body;
+    if (username) {
+        User.findAll({
+            where: {
+                username
+            }
+        })
+        .then((data) => {
+            if(data.length > 0) {
+                return res.status(400).json({
+                    status: 400,
+                    message: 'User with that username already exist. Please choose another.'
+                })
+            }
+            next();
+        });
+    }
+}
+
+export const validateEmail = (req, res, next) => {
+    const { email } = req.body;
+    if (email) {
+        User.findAll({
+            where: {
+                email
+            }
+        })
+        .then((data) => {
+            if(data.length > 0) {
+                return res.status(400).json({
+                    status: 400,
+                    message: 'User with that email already exist. Please choose another.'
+                })
+            }
+            next();
+        });
+    }
+}
