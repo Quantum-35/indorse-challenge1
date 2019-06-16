@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { login } from './actions';
 
-class Login extends Component {
+export class Login extends Component {
 
     state = {
         username: '',
