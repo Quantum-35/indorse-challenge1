@@ -27,7 +27,6 @@ describe('user Authentication', () => {
             .post('/api/auth/signup')
             .send(userCredentials)
             .end((err, res) => {
-                console.log('===>', res.body);
                 expect(res.status).to.equal(200);
                 expect(res.body.message).deep.equal('Email sent successfully')
                 done();
