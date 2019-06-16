@@ -4,9 +4,13 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import { App } from './App';
+import { Signup } from './Signup';
 
-describe('App', () => {
+describe('Signup', () => {
+    const props = {
+        signup: jest.fn(),
+        history: {}
+    }
     const initialState = {}
     let store;
     const mockStore = configureStore();
@@ -19,12 +23,11 @@ describe('App', () => {
         const wrapper = mount(
             <Provider store={store}>
                 <MemoryRouter>
-                    <App />
+                    <Signup {...props}/>
                 </MemoryRouter>
             </Provider>
         );
         // console.log(wrapper.debug())
-        expect(wrapper.find('.container').exists()).toBe(true);
+        expect(wrapper.find('.signup').exists()).toBe(true);
     })
-
-})
+});
