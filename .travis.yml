@@ -2,9 +2,9 @@ language: node_js
 node_js:
   - "stable"
 services:
-  - cd api/
   - postgresql
 before_script:
+  - cd api/
   - yarn add sequelize-cli
   - psql -c 'create database chalenge2;' -U postgres
 cache: yarn
