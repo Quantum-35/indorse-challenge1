@@ -1,15 +1,27 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 
 import './App.css';
 import Signup from './components/Signup/Signup';
-import Login from './components/Login/Login'
+import Login from './components/Login/Login';
+import Home from './components/Home/Home';
+import store from './store/store';
+import ROUTES from './utils/Routes';
 
-function App() {
+const App = () => {
   return (
-    <div className="container">
-      {/* <Signup /> */}
-      <Login />
-    </div>
+    <Provider store={store}>
+      <Router>
+        <div className="container">
+          <Switch>
+              <Route exact path={ROUTES.login} component={Login}/>
+              <Route path={ROUTES.home} component={Signup}/>
+              <Route path={ROUTES.dashboard} component={Home}/>
+          </Switch>
+        </div>
+      </Router>
+    </Provider>
   );
 }
 
