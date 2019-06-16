@@ -1,10 +1,11 @@
 language: node_js
 node_js:
   - "stable"
+services:
+  - postgresql
 before_script:
   - yarn add sequelize-cli
-#   - sequelize db:migrate
-#   - sequelize db:seed:all
+  - psql -c 'create database chalenge2;' -U postgres
 cache: yarn
 script: 
   - yarn run test
