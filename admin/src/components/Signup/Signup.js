@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import { signup } from './actions';
 
@@ -88,7 +89,7 @@ class Signup extends Component {
                                 </div>
                                 <div className="col s6">
                                     <button type="submit" className="login-button">
-                                        Login
+                                        <Link to={'/login'}>Login</Link>
                                     </button>
                                 </div>
                         </div>
