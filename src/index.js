@@ -1,3 +1,4 @@
+import 'regenerator-runtime';
 import express from 'express';
 import dotenv from 'dotenv';
 
@@ -20,3 +21,5 @@ sequelize.sync().then(() => {
         console.log(`Database Connected Successfully.Server running at port ${port} in ${process.env.NODE_ENV} mode`);
     })
 })
+
+export default app;

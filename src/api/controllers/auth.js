@@ -11,7 +11,7 @@ class AuthController {
     static async signup(req, res) {
         const {body: {
             firstName, lastName, email, password, username,
-            bio, gender, verified,
+            bio, gender,
         }} = req;
 
         if(Object.keys(req.body).length === 0) {
@@ -22,7 +22,7 @@ class AuthController {
         }
         const newUser = await User.create({
             firstName,
-            lastName, email, verified,
+            lastName, email, verified:false,
             password: bcrypt.hashSync(password, 8),
             username,
             bio, gender
@@ -81,7 +81,7 @@ class AuthController {
                     }
                     return res.status(400).json({
                         status: 400,
-                        message: "Invalid username or Password!!"
+                        message: "Invalid username or Password!!!"
                     });
                 }
                 return res.status(400).json({
@@ -99,7 +99,15 @@ class AuthController {
 
     static async verifyAccount(req, res) {
         const { token } = req.query;
-        const user = jwt.verify(token, process.env.SECRET_KEY)
+        let user;
+        try {
+            user = jwt.verify(token, process.env.SECRET_KEY);
+        } catch (error) {
+            return res.status(401).json({
+                status: 401,
+                message: "Invalid or Expired token"
+            })
+        }
         if (user) {
             try {
                 await User.update(
@@ -117,7 +125,7 @@ class AuthController {
                 })
             }
         }
-        res.status(401).json({
+        return res.status(401).json({
             status: 401,
             message: "Invalid or Expired token"
         })
