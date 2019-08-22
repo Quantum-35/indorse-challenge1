@@ -20,7 +20,7 @@ app.use('/api', api)
 app.use('/', (req, res) => {
     res.status(200).send({
       status: 200,
-      error: {
+      message: {
         message: 'post to /api/auth/signup to signup',
       }
     });
