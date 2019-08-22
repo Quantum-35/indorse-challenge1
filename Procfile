@@ -1,1 +1,1 @@
-web: node api/index.js
+web: NODE_ENV=development yarn start
