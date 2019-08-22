@@ -19,7 +19,8 @@ config.test = {
 };
 
 config.production = {
-  dbUrl: process.env.PROD_DATABASE_URL,
+  use_env_variable: 'PROD_DATABASE_URL',
+  dialect: 'postgres'
 };
 
 module.exports = config;
