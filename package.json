@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/index.js",
     "build": "babel src --out-dir dist",
-    "start": "NODE_ENV=development nodemon --exec babel-node src/index.js",
-    "serve": "yarn run build && node dist/index.js",
+    "start:dev": "NODE_ENV=development nodemon --exec babel-node src/index.js",
     "migrate": "NODE_ENV=test sequelize db:migrate",
     "undo": "NODE_ENV=test sequelize db:migrate:undo",
     "seed": "NODE_ENV=test sequelize db:seed:all",
@@ -17,6 +17,7 @@
   "author": "Quantum35",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.5.5",
     "@hapi/joi": "^15.0.3",
     "@sendgrid/mail": "^6.4.0",
     "bcrypt": "^3.0.6",
@@ -28,6 +29,7 @@
     "lodash": "^4.17.11",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
+    "morgan": "^1.9.1",
     "regenerator-runtime": "^0.13.2",
     "sequelize": "^5.8.9"
   },

@@ -16,6 +16,25 @@ globalMiddleware(app);
 
 app.use('/api', api)
 
+
+app.use('/', (req, res) => {
+    res.status(200).send({
+      status: 200,
+      message: {
+        message: 'post to /api/auth/signup to signup',
+      }
+    });
+  });
+
+app.use((req, res) => {
+    res.status(404).send({
+      status: 404,
+      error: {
+        message: 'Page Not found',
+      }
+    });
+  });
+
 sequelize.sync().then(() => {
     app.listen(port, () => {
         console.log(`Database Connected Successfully.Server running at port ${port} in ${process.env.NODE_ENV} mode`);
